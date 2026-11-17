@@ -11,7 +11,13 @@ import sqlite3
 from . import auth
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DB_PATH = os.path.join(BASE_DIR, "spamshield.db")
+if os.environ.get("VERCEL") == "1":
+    # Vercel's filesystem is read-only except /tmp: keep the runtime
+    # database there. It is recreated and reseeded on every cold start,
+    # which is fine for the demo (seed accounts + dataset come from data.csv).
+    DB_PATH = os.path.join("/tmp", "spamshield.db")
+else:
+    DB_PATH = os.path.join(BASE_DIR, "spamshield.db")
 DATA_CSV = os.path.join(BASE_DIR, "data.csv")
 
 
