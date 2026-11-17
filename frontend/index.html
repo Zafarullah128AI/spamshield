@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpamShield — SMS Spam Detection</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">🛡️ SpamShield</div>
+  <div class="tagline">SMS Spam Detection</div>
+  <nav id="nav">
+    <button data-view="check" class="navbtn active">Check SMS</button>
+    <button data-view="bulk" class="navbtn">Bulk Check</button>
+    <button data-view="dashboard" class="navbtn">Dashboard</button>
+    <button data-view="dataset" class="navbtn">Dataset</button>
+    <button data-view="evaluate" class="navbtn">Evaluate</button>
+    <button data-view="admin" class="navbtn" id="adminNav" style="display:none">Admin</button>
+  </nav>
+  <div id="authArea">
+    <button id="loginBtn" class="btn-outline">Login / Register</button>
+    <span id="userChip" style="display:none"></span>
+    <button id="logoutBtn" class="btn-outline" style="display:none">Logout</button>
+  </div>
+</header>
+
+<main>
+  <p id="msg" class="msg" style="display:none"></p>
+
+  <!-- ============ CHECK ============ -->
+  <section id="view-check" class="view">
+    <h1>Check an SMS</h1>
+    <p class="sub">Paste any SMS below. The model replies <b>Spam</b> or <b>Ham</b> (not spam), with a confidence score and the words that influenced the decision.</p>
+    <textarea id="smsInput" rows="4" placeholder="Type or paste an SMS message here..."></textarea>
+    <div class="row">
+      <button class="btn" onclick="checkSms()">Check Message</button>
+      <span class="hint">Tip: login first and your checks are saved to your history.</span>
+    </div>
+    <div class="row examples">
+      <span>Try an example:</span>
+      <button class="chip-btn" onclick="tryExample('CONGRATULATIONS! Your number won a $500 gift voucher. Click to claim now!')">🎁 Prize spam</button>
+      <button class="chip-btn" onclick="tryExample('Your bank account will be closed today. Verify your details at this link now.')">🏦 Bank scam</button>
+      <button class="chip-btn" onclick="tryExample('Please bring the file to the meeting tomorrow morning.')">📄 Normal message</button>
+      <button class="chip-btn" onclick="tryExample('The class test has been moved to Friday, please inform everyone.')">🎓 Class update</button>
+    </div>
+    <div id="checkResult"></div>
+  </section>
+
+  <!-- ============ BULK ============ -->
+  <section id="view-bulk" class="view" style="display:none">
+    <h1>Bulk Check</h1>
+    <p class="sub">One message per line (up to 50). Logged-in users get every result saved to their history.</p>
+    <textarea id="bulkInput" rows="8" placeholder="First message here&#10;Second message here&#10;..."></textarea>
+    <div class="row">
+      <button class="btn" onclick="bulkCheck()">Check All</button>
+    </div>
+    <div id="bulkResult"></div>
+  </section>
+
+  <!-- ============ DASHBOARD ============ -->
+  <section id="view-dashboard" class="view" style="display:none">
+    <h1>Dashboard</h1>
+    <div id="dashStats" class="cards"></div>
+    <h2>Recent checks</h2>
+    <div id="dashHistory"></div>
+  </section>
+
+  <!-- ============ DATASET ============ -->
+  <section id="view-dataset" class="view" style="display:none">
+    <h1>Dataset</h1>
+    <p class="sub">Labeled messages the model learns from. Add your own labeled message and the model retrains instantly. Admins can also upload a CSV with <code>label,message</code> columns.</p>
+    <div class="row">
+      <button class="chip-btn" onclick="loadDataset('all')">All</button>
+      <button class="chip-btn" onclick="loadDataset('spam')">Spam only</button>
+      <button class="chip-btn" onclick="loadDataset('ham')">Ham only</button>
+      <input id="dsSearch" type="text" placeholder="Search messages..." oninput="loadDataset(currentFilter)">
+    </div>
+    <div id="dsCounts" class="row"></div>
+    <div id="dsTable"></div>
+    <h2>Add a labeled message</h2>
+    <div class="row">
+      <select id="addLabel">
+        <option value="ham">Ham (not spam)</option>
+        <option value="spam">Spam</option>
+      </select>
+      <input id="addText" type="text" placeholder="Message text..." style="flex:1">
+      <button class="btn" onclick="addMessage()">Add &amp; Retrain</button>
+    </div>
+    <div id="uploadBox" style="display:none">
+      <h2>Upload CSV (admin)</h2>
+      <input type="file" id="csvFile" accept=".csv">
+      <button class="btn" onclick="uploadCsv()">Upload &amp; Retrain</button>
+    </div>
+  </section>
+
+  <!-- ============ EVALUATE ============ -->
+  <section id="view-evaluate" class="view" style="display:none">
+    <h1>Model Evaluation</h1>
+    <p class="sub">20 labeled test messages that do <b>not</b> appear in the training dataset — an honest held-out test. Login required.</p>
+    <button class="btn" onclick="runEvaluation()">Run Evaluation</button>
+    <div id="evalResult"></div>
+  </section>
+
+  <!-- ============ ADMIN ============ -->
+  <section id="view-admin" class="view" style="display:none">
+    <h1>Admin — Model Control</h1>
+    <div id="adminMetrics" class="cards"></div>
+    <div id="adminMatrix"></div>
+    <button class="btn" onclick="retrain()">Retrain Model Now</button>
+  </section>
+
+  <!-- ============ AUTH ============ -->
+  <section id="view-auth" class="view" style="display:none">
+    <h1>Login</h1>
+    <input id="loginEmail" type="email" placeholder="Email">
+    <input id="loginPass" type="password" placeholder="Password">
+    <div class="row">
+      <button class="btn" onclick="doLogin()">Login</button>
+      <button class="btn-outline" onclick="showRegister()">Create account instead</button>
+    </div>
+    <div id="registerBox" style="display:none">
+      <h2>Register</h2>
+      <input id="regName" type="text" placeholder="Full name">
+      <input id="regEmail" type="email" placeholder="Email">
+      <input id="regPass" type="password" placeholder="Password (min 4 characters)">
+      <div class="row"><button class="btn" onclick="doRegister()">Register</button></div>
+    </div>
+    <p class="hint">Demo accounts — Admin: <b>admin@spamshield.edu.pk / admin123</b> · User: <b>demo@spamshield.edu.pk / demo123</b></p>
+  </section>
+</main>
+
+<footer>SpamShield — SMS Spam Detection · TF-IDF + Naive Bayes · Built for the ML exhibition</footer>
+<script src="/app.js"></script>
+</body>
+</html>

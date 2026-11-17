@@ -1,0 +1,46 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; background: #f2f5f9; color: #222; }
+.topbar { background: #1F3864; color: #fff; padding: 14px 22px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.brand { font-size: 24px; font-weight: 800; }
+.tagline { color: #BDD7EE; font-size: 14px; }
+nav { display: flex; gap: 6px; flex-wrap: wrap; margin-left: auto; }
+.navbtn { background: transparent; border: 1px solid #5b7ba6; color: #fff; padding: 7px 13px; border-radius: 20px; cursor: pointer; font-size: 14px; }
+.navbtn.active, .navbtn:hover { background: #2E75B6; border-color: #2E75B6; }
+#authArea { display: flex; gap: 8px; align-items: center; }
+.btn { background: #1F3864; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-size: 15px; }
+.btn:hover { background: #2E75B6; }
+.btn-outline { background: transparent; color: #fff; border: 1px solid #fff; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+main { max-width: 960px; margin: 0 auto; padding: 22px; }
+h1 { color: #1F3864; margin: 4px 0 6px; }
+h2 { color: #1F3864; margin-top: 26px; }
+.sub { color: #555; line-height: 1.5; }
+textarea, input[type="text"], input[type="email"], input[type="password"], select {
+  width: 100%; padding: 11px; font-size: 15px; border: 1px solid #ccc; border-radius: 6px; margin: 6px 0; font-family: inherit;
+}
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin: 10px 0; }
+.hint { color: #666; font-size: 13px; }
+.chip-btn { background: #e8eef7; border: 1px solid #BDD7EE; padding: 7px 12px; border-radius: 20px; cursor: pointer; font-size: 13px; }
+.chip-btn:hover { background: #dbe7f5; }
+.cards { display: flex; gap: 14px; flex-wrap: wrap; margin: 14px 0; }
+.card { background: #fff; border-radius: 10px; padding: 16px 20px; box-shadow: 0 1px 4px rgba(0,0,0,.1); min-width: 150px; }
+.card .num { font-size: 28px; font-weight: 800; color: #1F3864; }
+.card .lbl { color: #666; font-size: 13px; }
+.result { background: #fff; border-radius: 10px; padding: 18px; box-shadow: 0 1px 4px rgba(0,0,0,.1); margin-top: 16px; }
+.badge { display: inline-block; padding: 6px 16px; border-radius: 20px; font-weight: 800; font-size: 18px; color: #fff; }
+.badge.spam { background: #c0392b; }
+.badge.ham { background: #27864a; }
+.bar { height: 12px; background: #e5e5e5; border-radius: 6px; overflow: hidden; margin: 10px 0; }
+.bar > div { height: 100%; background: #c0392b; }
+.bar.ham > div { background: #27864a; }
+.word { display: inline-block; background: #fdecea; border: 1px solid #f0b8b0; color: #922; padding: 3px 9px; border-radius: 12px; margin: 2px; font-size: 13px; }
+.word.ham { background: #e8f5ec; border-color: #a9d6b8; color: #1d5c33; }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; }
+th { background: #1F3864; color: #fff; text-align: left; padding: 10px; font-size: 14px; }
+td { padding: 9px 10px; border-bottom: 1px solid #eee; font-size: 14px; vertical-align: top; }
+.msg { background: #fff3cd; border: 1px solid #f0d98c; padding: 12px 16px; border-radius: 8px; }
+.msg.ok { background: #e8f5ec; border-color: #a9d6b8; }
+.msg.err { background: #fdecea; border-color: #f0b8b0; }
+footer { text-align: center; color: #888; font-size: 13px; padding: 20px; }
+code { background: #eef2f7; padding: 1px 5px; border-radius: 4px; }
+.small { font-size: 13px; color: #666; }
+.del { color: #c0392b; cursor: pointer; background: none; border: none; font-size: 16px; }
